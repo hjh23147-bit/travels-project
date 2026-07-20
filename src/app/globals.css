@@ -1,0 +1,224 @@
+@import "tailwindcss";
+
+/* ============================
+   رحلات النور - Luxury Theme
+   ============================ */
+
+@theme {
+  --font-cairo: "Cairo", sans-serif;
+  --font-serif: "Playfair Display", "Amiri", serif;
+  
+  /* Primary - Deep Navy */
+  --color-navy-50: #f0f4f8;
+  --color-navy-100: #d9e2ec;
+  --color-navy-200: #bcccdc;
+  --color-navy-300: #9fb3c8;
+  --color-navy-400: #829ab1;
+  --color-navy-500: #627d98;
+  --color-navy-600: #486581;
+  --color-navy-700: #334e68;
+  --color-navy-800: #243b53;
+  --color-navy-900: #0B1E2D; /* Primary brand */
+  --color-navy-950: #071520;
+  
+  /* Secondary - Gold */
+  --color-gold-50: #fbf8ef;
+  --color-gold-100: #f5eed6;
+  --color-gold-200: #ecdfad;
+  --color-gold-300: #e0ca7e;
+  --color-gold-400: #d8b95a;
+  --color-gold-500: #D4AF37; /* Gold brand */
+  --color-gold-600: #c19a2b;
+  --color-gold-700: #9a7420;
+  --color-gold-800: #7f5e1f;
+  --color-gold-900: #6c4e1f;
+  
+  /* Accent - Dark Green */
+  --color-green-50: #ecfdf3;
+  --color-green-100: #d1fae1;
+  --color-green-500: #10b981;
+  --color-green-800: #065f46;
+  --color-green-900: #0F5132; /* Accent brand */
+}
+
+/* Global base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #ffffff;
+}
+
+body {
+  font-family: var(--font-cairo);
+  background-color: #ffffff;
+  color: var(--color-navy-900);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f4f8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold-500);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-600);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-gold-500);
+  color: #ffffff;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-dark {
+  background: rgba(11, 30, 45, 0.85); /* Navy */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gold gradient text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #e0ca7e 0%, #D4AF37 50%, #c19a2b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover effects - Luxury Minimal */
+.card-luxury {
+  background: #ffffff;
+  border: 1px solid rgba(11, 30, 45, 0.05); /* very light navy */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(11, 30, 45, 0.03);
+}
+
+.card-luxury:hover {
+  transform: translateY(-5px);
+  border-color: rgba(212, 175, 55, 0.3); /* Gold border on hover */
+  box-shadow: 0 20px 40px rgba(11, 30, 45, 0.08);
+}
+
+/* Gold glow effect for premium items */
+.gold-glow {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(212, 175, 55, 0.05);
+}
+
+/* Button gradient */
+.btn-gold {
+  background: var(--color-gold-500);
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.btn-gold:hover {
+  background: var(--color-gold-600);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--color-gold-500);
+  border: 1px solid var(--color-gold-500);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--color-gold-600);
+  border-color: var(--color-gold-600);
+}
+
+.btn-outline-white {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-white:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+/* Airplane Animations */
+@keyframes fly-right-up {
+  0% { transform: translate(-10vw, 110vh) rotate(45deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translate(110vw, -10vh) rotate(45deg); opacity: 0; }
+}
+
+@keyframes fly-left-down {
+  0% { transform: translate(110vw, -10vh) rotate(-135deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.8; }
+  100% { transform: translate(-10vw, 110vh) rotate(-135deg); opacity: 0; }
+}
+
+.animate-fly-1 {
+  animation: fly-right-up 35s linear infinite;
+}
+
+.animate-fly-2 {
+  animation: fly-left-down 45s linear infinite;
+  animation-delay: 5s;
+}
