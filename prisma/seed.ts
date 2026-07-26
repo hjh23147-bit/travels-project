@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import crypto from "crypto";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -196,12 +196,12 @@ async function main() {
 
   // 6. Create Admin User
   const adminPassword = "225211.10";
-  const passwordHash = crypto.createHash("sha256").update(adminPassword).digest("hex");
+  const passwordHash = await bcrypt.hash(adminPassword, 10);
   
   await prisma.user.create({
     data: {
-      name: "أبو أحمد (مدير النظام)",
-      email: "admin@alnoortravel.com",
+      name: "وسام (مدير النظام)",
+      email: "wesam.os",
       passwordHash: passwordHash,
       role: "ADMIN"
     }
