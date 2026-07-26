@@ -167,10 +167,13 @@ export default function BookPage() {
       });
       if (res.ok) {
         setIsSuccess(true);
-        // Build WhatsApp Message for the Project Manager
-        const serviceName = services.find(s => s.value === form.serviceType)?.label || form.serviceType;
-        const text = `مرحباً، لدي طلب حجز جديد عبر الموقع 🌟\n\n👤 الاسم: ${form.name}\n📞 الهاتف: ${form.phone}\n🌍 الدولة: ${form.country}\n🕋 الخدمة المطلوبة: ${serviceName}\n👥 عدد الأشخاص: ${form.travelersCount}\n📅 تاريخ السفر: ${form.travelDate}\n\nأرجو التواصل معي لتأكيد الحجز.`;
+        const data = await res.json();
+        const shortId = data.lead?.id ? data.lead.id.split("-")[0].toUpperCase() : Math.floor(Math.random() * 100000);
+        
+        // Build Secure WhatsApp Message (Only Reference Code)
+        const text = `مرحباً، لدي طلب حجز جديد تم إرساله عبر الموقع.\nرقم المرجع الخاص بي هو: #${shortId}\nأرجو التحقق من الطلب من خلال لوحة التحكم الخاصة بكم وتأكيده.`;
         const encodedText = encodeURIComponent(text);
+        
         const selectedAgency = agencies.find(a => a.id === form.agencyId);
         const phone = selectedAgency?.contactPhone || "967781668332";
         setAgencyPhone(phone); // Update for success screen

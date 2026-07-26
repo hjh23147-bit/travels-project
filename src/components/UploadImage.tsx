@@ -18,27 +18,17 @@ export default function UploadImage({ value, onChange, label = "صورة" }: Upl
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        onChange(data.url);
-      } else {
-        alert("فشل رفع الصورة");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("حدث خطأ أثناء رفع الصورة");
-    } finally {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64String = event.target?.result as string;
+      onChange(base64String);
       setUploading(false);
-    }
+    };
+    reader.onerror = () => {
+      alert("فشل قراءة الصورة");
+      setUploading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   return (

@@ -8,10 +8,11 @@ import { Star, LayoutDashboard, Package, Users, FileText, LogOut, Menu, X, Build
 // All sidebar links with role restrictions
 // allowedRoles: if set, only these roles can see the link. If not set, all roles can see it.
 const sidebarLinks = [
-  { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard, adminOnly: true },
+  { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard, adminOnly: false },
+  { href: "/admin/agency-requests", label: "طلبات المكاتب", icon: Building2, adminOnly: true },
   { href: "/admin/agencies", label: "إدارة المكاتب", icon: Building2, adminOnly: true },
-  { href: "/admin/packages", label: "إدارة الباقات", icon: Package, adminOnly: true },
-  { href: "/admin/orders", label: "إدارة الطلبات", icon: Users, adminOnly: true },
+  { href: "/admin/packages", label: "إدارة الباقات", icon: Package, adminOnly: false },
+  { href: "/admin/orders", label: "إدارة الطلبات", icon: Users, adminOnly: false },
   { href: "/admin/ads", label: "الإعلانات والمقالات", icon: Megaphone, adminOnly: false },
   { href: "/admin/users", label: "إدارة المدراء", icon: Users, adminOnly: true },
   { href: "/admin/content", label: "إدارة المحتوى", icon: FileText, adminOnly: true },
@@ -48,9 +49,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       return;
     }
 
-    // AGENCY_ADMIN: block access to all admin pages except /admin/ads
-    if (role === "AGENCY_ADMIN" && !pathname.startsWith("/admin/ads") && pathname !== "/admin/login") {
-      window.location.replace("/admin/ads");
+    // AGENCY_ADMIN: block access to all admin pages except their own modules
+    if (role === "AGENCY_ADMIN" && 
+        pathname !== "/admin" && 
+        !pathname.startsWith("/admin/packages") &&
+        !pathname.startsWith("/admin/orders") &&
+        !pathname.startsWith("/admin/ads") && 
+        pathname !== "/admin/login") {
+      window.location.replace("/admin");
       return;
     }
     

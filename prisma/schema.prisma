@@ -140,3 +140,16 @@ model Advertisement {
 
   @@index([agencyId, isActive])
 }
+
+model AgencyRegistration {
+  id           String   @id @default(uuid())
+  agencyName   String
+  ownerName    String
+  email        String
+  phone        String
+  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt    DateTime @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}
