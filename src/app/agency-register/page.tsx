@@ -50,7 +50,7 @@ export default function AgencyRegisterPage() {
           تم استلام طلب الانضمام <span className="text-gold-400">بنجاح!</span>
         </h1>
         <p className="text-navy-300 text-lg mb-10 max-w-md mx-auto leading-relaxed">
-          شكراً لاهتمامك بالانضمام إلى شبكة وكلاء "رحلات النور". سيقوم فريقنا بمراجعة طلبك والتواصل معك قريباً لتفعيل حساب مكتبك.
+          شكراً لاهتمامك بالانضمام إلى شبكة وكلاء &quot;رحلات النور&quot;. سيقوم فريقنا بمراجعة طلبك والتواصل معك قريباً لتفعيل حساب مكتبك.
         </p>
         <Link href="/" className="btn-gold px-8 py-3.5 rounded-xl font-bold flex items-center gap-2 mx-auto">
           العودة للرئيسية

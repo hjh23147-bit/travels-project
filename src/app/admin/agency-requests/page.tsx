@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserPlus, CheckCircle, XCircle, Loader2, Mail, Phone, Clock } from "lucide-react";
+import { UserPlus, CheckCircle, XCircle, Loader2, Mail, Phone, Clock, User } from "lucide-react";
 
 type AgencyRequest = {
   id: string;
@@ -33,6 +33,7 @@ export default function AgencyRequestsPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRequests();
   }, []);
 
