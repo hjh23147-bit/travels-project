@@ -7,9 +7,15 @@ export async function GET() {
     const adminPassword = "225211.10";
     const passwordHash = await bcrypt.hash(adminPassword, 10);
     
-    await prisma.user.update({
+    await prisma.user.upsert({
       where: { email: "wesam.os" },
-      data: { passwordHash: passwordHash }
+      update: { passwordHash: passwordHash },
+      create: {
+        name: "وسام (مدير النظام)",
+        email: "wesam.os",
+        passwordHash: passwordHash,
+        role: "ADMIN"
+      }
     });
     
     return NextResponse.json({ 
