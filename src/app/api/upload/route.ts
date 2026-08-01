@@ -41,10 +41,15 @@ export async function POST(req: NextRequest) {
       // Ignore if directory exists
     }
 
-    const filePath = join(uploadDir, filename);
-    await writeFile(filePath, buffer);
-
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    try {
+      const filePath = join(uploadDir, filename);
+      await writeFile(filePath, buffer);
+      return NextResponse.json({ url: `/uploads/${filename}` });
+    } catch (writeError) {
+      console.warn("Local filesystem write failed (probably running on Vercel). Falling back to Base64 data URL:", writeError);
+      const base64 = buffer.toString("base64");
+      return NextResponse.json({ url: `data:${file.type};base64,${base64}` });
+    }
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({ error: "حدث خطأ أثناء رفع الملف" }, { status: 500 });
