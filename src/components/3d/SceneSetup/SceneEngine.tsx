@@ -18,6 +18,11 @@ export default function SceneEngine({ children }: SceneEngineProps) {
 
   useEffect(() => {
     setMounted(true);
+    if (typeof window !== "undefined") {
+      const isMobile = window.innerWidth < 768;
+      setDpr(isMobile ? 1.0 : 1.5);
+      setPerformanceLow(isMobile);
+    }
   }, []);
 
   if (!mounted) {

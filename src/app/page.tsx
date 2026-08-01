@@ -103,12 +103,12 @@ export default async function HomePage() {
                     الوجهة الرسمية المعتمدة لخدمات ضيوف الرحمن
                   </span>
                   
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.25] mb-6 font-serif">
+                  <h1 className="text-[clamp(1.75rem,4.5vw,3.75rem)] font-black text-white leading-[1.2] mb-6 font-serif">
                     {heroTitle1} <br />
                     <span className="text-gradient-gold">{heroTitle2}</span>
                   </h1>
                   
-                  <p className="text-lg sm:text-xl text-gray-300 leading-relaxed mb-10 font-light whitespace-pre-line">
+                  <p className="text-[clamp(0.95rem,1.2vw,1.25rem)] text-gray-300 leading-relaxed mb-10 font-light whitespace-pre-line">
                     {heroSubtitle}
                   </p>
 
@@ -173,7 +173,7 @@ export default async function HomePage() {
             
             <AnimatedSection className="text-center mb-20 pointer-events-auto" direction="down">
               <span className="text-gold-500 text-xs sm:text-sm font-extrabold tracking-widest uppercase bg-gold-500/10 px-3.5 py-1.5 rounded-full border border-gold-500/20">لماذا نحن</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-4 mb-4">
+              <h2 className="text-[clamp(1.5rem,3.8vw,2.3rem)] font-extrabold text-white mt-4 mb-4">
                 تميزنا يصنع <span className="text-gradient-gold">الفارق في تجربتكم</span>
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base font-light">نلتزم بتقديم أرقى الخدمات والحلول المتكاملة لضمان أداء النسك بطمأنينة وراحة كاملة.</p>
@@ -209,7 +209,7 @@ export default async function HomePage() {
             
             <AnimatedSection className="text-center mb-16 pointer-events-auto" direction="down">
               <span className="text-gold-500 text-xs sm:text-sm font-extrabold tracking-widest uppercase bg-gold-500/10 px-3.5 py-1.5 rounded-full border border-gold-500/20">الباقات التفاعلية</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-4 mb-4">
+              <h2 className="text-[clamp(1.5rem,3.8vw,2.3rem)] font-extrabold text-white mt-4 mb-4">
                 تصفح الباقات <span className="text-gradient-gold">حول العالم</span>
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base font-light">
@@ -311,7 +311,7 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <AnimatedSection className="text-center mb-16 pointer-events-auto" direction="down">
-              <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
+              <h2 className="text-[clamp(1.5rem,3.8vw,2.3rem)] font-black text-white mb-4">
                 خدماتنا المميزة
               </h2>
               <p className="text-gray-450 max-w-2xl mx-auto text-base sm:text-lg font-light">نقدم مجموعة متكاملة من الخدمات لتلبية جميع احتياجاتك</p>
@@ -342,7 +342,7 @@ export default async function HomePage() {
             
             <AnimatedSection className="text-center mb-20 pointer-events-auto" direction="down">
               <span className="text-gold-500 text-xs sm:text-sm font-extrabold tracking-widest uppercase bg-gold-500/10 px-3.5 py-1.5 rounded-full border border-gold-500/20">آراء المعتمرين</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-4 mb-4">
+              <h2 className="text-[clamp(1.5rem,3.8vw,2.3rem)] font-extrabold text-white mt-4 mb-4">
                 ثقة نعتز ونفخر <span className="text-gradient-gold">بها دائماً</span>
               </h2>
               <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base font-light">تجارب إيمانية واقعية يرويها ضيوف الرحمن الذين تشرفنا بتسهيل وتيسير نسكهم.</p>
@@ -407,7 +407,7 @@ export default async function HomePage() {
         {/* ============ FINAL CTA ============ */}
         <section className="py-24 bg-[#020617]/90 relative overflow-hidden text-center border-t border-white/5 pointer-events-auto">
           <AnimatedSection className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" direction="up">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6 leading-tight">
+            <h2 className="text-[clamp(1.5rem,3.8vw,2.3rem)] font-extrabold text-white mb-6 leading-tight">
               ابدأ رحلتك المباركة اليوم بكل <span className="text-gradient-gold">يسر وطمأنينة</span>
             </h2>
             <p className="text-gray-300 text-base sm:text-lg mb-10 max-w-2xl mx-auto font-light leading-relaxed">

@@ -21,20 +21,22 @@ function FloatingCard({ angleOffset, title, price, hotel, days, badge, isVIP = f
   const [hovered, setHovered] = useState(false);
   const { setSelectedPackage, setIsBookingModalOpen } = useAppStore();
 
-  const GLOBE_RADIUS = 2.5;
-  const ORBIT_RADIUS = 4.3;
-
-  useFrame(({ clock }) => {
+  useFrame(({ clock, size }) => {
     if (meshRef.current) {
+      // Scale orbit radius dynamically based on screen width
+      const isMobile = size.width < 768;
+      const orbitRadius = isMobile ? 3.3 : 4.4;
+
       // Calculate dynamic angle: static offset + slow rotation based on time (paused if hovered)
-      const t = clock.getElapsedTime() * (hovered ? 0.02 : 0.12);
+      const t = clock.getElapsedTime() * (hovered ? 0.015 : 0.11);
       const angle = angleOffset + t;
 
       // Position along the circular orbit on the X-Z plane
-      meshRef.current.position.x = ORBIT_RADIUS * Math.sin(angle);
-      meshRef.current.position.z = ORBIT_RADIUS * Math.cos(angle);
-      // Subtle float up and down to simulate zero gravity
-      meshRef.current.position.y = Math.sin(clock.getElapsedTime() * 0.8 + angleOffset) * 0.15;
+      meshRef.current.position.x = orbitRadius * Math.sin(angle);
+      meshRef.current.position.z = orbitRadius * Math.cos(angle);
+      
+      // Zero-gravity waving float
+      meshRef.current.position.y = Math.sin(clock.getElapsedTime() * 0.7 + angleOffset) * 0.12;
     }
   });
 
@@ -57,8 +59,8 @@ function FloatingCard({ angleOffset, title, price, hotel, days, badge, isVIP = f
         <div 
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className={`relative p-5 rounded-3xl backdrop-blur-2xl shadow-2xl transition-all duration-300 ${
-            hovered ? "scale-105" : ""
+          className={`relative p-4 md:p-5 rounded-2xl md:rounded-3xl backdrop-blur-2xl shadow-2xl transition-all duration-300 scale-80 sm:scale-90 md:scale-100 ${
+            hovered ? "scale-[0.85] sm:scale-[0.95] md:scale-105" : ""
           } ${
             isVIP 
               ? "bg-[#061129]/80 border border-gold-500/30" 
@@ -66,11 +68,11 @@ function FloatingCard({ angleOffset, title, price, hotel, days, badge, isVIP = f
           }`}
           dir="rtl"
           style={{ 
-            width: "290px",
+            width: "270px",
             boxShadow: isVIP ? "0 20px 40px rgba(212,175,55,0.07)" : "0 20px 40px rgba(0,243,255,0.05)"
           }}
         >
-          {/* Curved glowing sidebar overlay (mocking curved glass panel) */}
+          {/* Curved glowing sidebar overlay (curved glass panel aesthetic) */}
           <div className={`absolute inset-y-0 right-0 w-1 rounded-r-3xl bg-gradient-to-b from-transparent via-${isVIP ? "[#d4af37]" : "[#00f3ff]"} to-transparent shadow-[0_0_12px_#${isVIP ? "d4af37" : "00f3ff"}]`} />
 
           {/* Badge & Rating Header */}
@@ -89,31 +91,27 @@ function FloatingCard({ angleOffset, title, price, hotel, days, badge, isVIP = f
             </div>
           </div>
 
-          {/* Isometric SVG Kaaba Vector in the center */}
-          <div className="relative h-24 w-full flex items-center justify-center my-3 bg-navy-950/20 rounded-2xl overflow-hidden border border-white/5">
-            <svg className="w-16 h-16 opacity-90 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]" viewBox="0 0 100 100">
-              {/* Isometric Kaaba Box */}
+          {/* Isometric SVG Kaaba Vector */}
+          <div className="relative h-20 w-full flex items-center justify-center my-3 bg-navy-950/20 rounded-2xl overflow-hidden border border-white/5">
+            <svg className="w-14 h-14 opacity-90 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]" viewBox="0 0 100 100">
               <path d="M 30 50 L 50 62 L 70 50 L 50 38 Z" fill="#111827" />
               <path d="M 30 50 L 50 62 L 50 82 L 30 70 Z" fill="#030712" />
               <path d="M 70 50 L 50 62 L 50 82 L 70 70 Z" fill="#1f2937" />
-              {/* Golden Kiswa Belt */}
               <path d="M 30 54 L 50 66 L 50 69 L 30 57 Z" fill="#d4af37" />
               <path d="M 70 54 L 50 66 L 50 69 L 70 57 Z" fill="#d4af37" />
             </svg>
-            
-            {/* Flying Mini Airplane Overlay */}
-            <div className="absolute bottom-2 left-2 rotate-12">
-              <svg className="w-10 h-6 text-cyan-400 opacity-80" viewBox="0 0 24 24" fill="currentColor">
+            <div className="absolute bottom-1.5 left-1.5 rotate-12">
+              <svg className="w-8 h-5 text-cyan-400 opacity-80" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
               </svg>
             </div>
           </div>
 
           {/* Title */}
-          <h3 className="text-sm font-black text-white text-center mb-3">{title}</h3>
+          <h3 className="text-xs font-black text-white text-center mb-2.5">{title}</h3>
 
           {/* Features */}
-          <div className="space-y-2 border-t border-white/5 pt-3 mb-4 text-xs font-semibold text-gray-300">
+          <div className="space-y-1.5 border-t border-white/5 pt-2.5 mb-3 text-[11px] font-semibold text-gray-300">
             <div className="flex justify-between">
               <span className="text-gray-400">المدينة:</span>
               <span>{hotel}</span>
@@ -128,10 +126,10 @@ function FloatingCard({ angleOffset, title, price, hotel, days, badge, isVIP = f
             </div>
           </div>
 
-          {/* Gold Button matching mockup */}
+          {/* Gold Button */}
           <button
             onClick={handleBook}
-            className="w-full py-2.5 rounded-xl text-xs font-black transition-all bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-navy-950 shadow-md cursor-pointer"
+            className="w-full py-2 rounded-xl text-xs font-black transition-all bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-navy-950 shadow-md cursor-pointer"
           >
             احجز الآن
           </button>
