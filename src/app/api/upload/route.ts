@@ -6,15 +6,23 @@ import crypto from "crypto";
 export async function POST(req: NextRequest) {
   try {
     const role = req.headers.get("x-user-role");
-    if (!role || (role !== "SUPER_ADMIN" && role !== "ADMIN" && role !== "AGENCY_ADMIN")) {
-      return NextResponse.json({ error: "غير مصرح" }, { status: 403 });
-    }
-
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
 
     if (!file) {
       return NextResponse.json({ error: "لم يتم العثور على ملف" }, { status: 400 });
+    }
+
+    // 1. Strict validation of file types
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: "صيغة الملف غير مدعومة. يسمح فقط بـ PDF والصور (PNG, JPG, WEBP)" }, { status: 400 });
+    }
+
+    // 2. Strict validation of file size (max 5MB)
+    const maxBytes = 5 * 1024 * 1024;
+    if (file.size > maxBytes) {
+      return NextResponse.json({ error: "حجم الملف كبير جداً. الحد الأقصى 5 ميجابايت" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();

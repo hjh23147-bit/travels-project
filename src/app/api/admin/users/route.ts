@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         email: data.email,
         passwordHash,
         role: data.role,
-        agencyId: data.role === "AGENCY_ADMIN" ? data.agencyId : null,
+        agencyId: (data.role !== "SUPER_ADMIN" && data.role !== "ADMIN") ? data.agencyId : null,
       },
       select: { id: true, name: true, email: true, role: true, agencyId: true },
     });
@@ -76,7 +76,7 @@ export async function PUT(req: NextRequest) {
       name: data.name,
       email: data.email,
       role: data.role,
-      agencyId: data.role === "AGENCY_ADMIN" ? data.agencyId : null,
+      agencyId: (data.role !== "SUPER_ADMIN" && data.role !== "ADMIN") ? data.agencyId : null,
     };
 
     if (data.password) {

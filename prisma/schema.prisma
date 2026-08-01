@@ -32,11 +32,13 @@ model Agency {
   subscriptionType   String    @default("NONE") // MONTHLY, YEARLY, NONE
   subscriptionEndsAt DateTime?
   isActive           Boolean   @default(true)
+  type         String    @default("TRAVEL") // TRAVEL, EMPLOYMENT, BOTH
   users              User[]
   packages     Package[]
   services     Service[]
   leads        Lead[]
   ads          Advertisement[]
+  jobPackages  JobPackage[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -142,14 +144,57 @@ model Advertisement {
 }
 
 model AgencyRegistration {
-  id           String   @id @default(uuid())
-  agencyName   String
-  ownerName    String
-  email        String
-  phone        String
-  status       String   @default("PENDING") // PENDING, APPROVED, REJECTED
-  createdAt    DateTime @default(now())
+  id                   String   @id @default(uuid())
+  agencyName           String
+  ownerName            String
+  email                String
+  phone                String
+  status               String   @default("PENDING") // PENDING, APPROVED, REJECTED, MORE_DOCUMENTS_REQUESTED
+  agencyType           String   @default("TRAVEL") // TRAVEL, EMPLOYMENT, BOTH
+  commercialRegistry   String?  // File URL
+  taxCertificate       String?  // File URL
+  nationalId           String?  // File URL
+  license              String?  // File URL
+  logo                 String?  // File URL
+  additionalDocs       String?  // File URL
+  adminNotes           String?  // Admin review notes
+  createdAt            DateTime @default(now())
 
   @@index([status])
   @@index([createdAt])
+}
+
+model JobPackage {
+  id           String           @id @default(uuid())
+  title        String
+  description  String
+  price        Float
+  requiredDocs String           // Comma-separated list of documents
+  country      String
+  duration     String
+  status       String           @default("ACTIVE") // ACTIVE, INACTIVE
+  agencyId     String
+  agency       Agency           @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  reservations JobReservation[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([agencyId])
+}
+
+model JobReservation {
+  id             String     @id @default(uuid())
+  jobPackageId   String
+  jobPackage     JobPackage @relation(fields: [jobPackageId], references: [id], onDelete: Cascade)
+  applicantName  String
+  applicantEmail String
+  applicantPhone String
+  uploadedDocs   String     // JSON-string mapping required docs to URLs
+  status         String     @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  agencyId       String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([agencyId])
+  @@index([jobPackageId])
 }

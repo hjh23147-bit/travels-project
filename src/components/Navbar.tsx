@@ -28,6 +28,7 @@ const navLinks = [
   { href: "/", label: "الرئيسية" },
   { href: "/hajj-umrah", label: "الحج والعمرة" },
   { href: "/visas", label: "التأشيرات" },
+  { href: "/jobs", label: "فرص العمل" },
   { href: "/agencies", label: "المكاتب" },
   { href: "/#why-us", label: "لماذا نحن" },
   { href: "/hajj-umrah#packages", label: "العروض" },

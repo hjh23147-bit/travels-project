@@ -16,7 +16,10 @@ interface Stats {
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [recentLeads, setRecentLeads] = useState<Array<any>>([]);
+  const [allLeads, setAllLeads] = useState<Array<any>>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [selectedService, setSelectedService] = useState("ALL");
   const [servicesData, setServicesData] = useState<{name: string; value: number; color: string}[]>([]);
   const [monthlyData, setMonthlyData] = useState<{name: string; الطلبات: number}[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +77,7 @@ export default function AdminDashboard() {
             { name: "يونيو", الطلبات: leads.length > 0 ? leads.length : 40 },
           ]);
 
-          setRecentLeads(leads.slice(0, 6));
+          setAllLeads(leads);
         }
       } catch {
         // silently fail
@@ -120,8 +123,21 @@ export default function AdminDashboard() {
     return null;
   };
 
+  // Client-side filtering logic
+  const filteredLeads = allLeads.filter((lead) => {
+    const matchesSearch = 
+      lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lead.phone.includes(searchQuery) ||
+      (lead.country && lead.country.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesStatus = selectedStatus === "ALL" || lead.status === selectedStatus;
+    const matchesService = selectedService === "ALL" || lead.serviceType === selectedService;
+
+    return matchesSearch && matchesStatus && matchesService;
+  });
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-right">
       {/* Personalized Greeting */}
       <div className="bg-gradient-to-r from-navy-900 via-navy-800 to-navy-900 rounded-3xl p-8 sm:p-10 text-white shadow-lg border border-navy-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-gold-500/10 blur-3xl rounded-full translate-x-1/3 -translate-y-1/3"></div>
@@ -230,34 +246,83 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Leads */}
-      <div className="bg-white rounded-2xl border border-navy-100 overflow-hidden shadow-sm flex flex-col">
-        <div className="px-6 py-5 border-b border-navy-100 flex items-center justify-between bg-navy-50/30">
-          <h3 className="text-lg font-bold text-navy-900">أحدث الطلبات الواردة</h3>
+      {/* Extended Customer Search & Filtering List */}
+      <div className="bg-white rounded-3xl border border-navy-100 overflow-hidden shadow-sm flex flex-col">
+        <div className="px-6 py-5 border-b border-navy-100 flex flex-col gap-4 bg-navy-50/20">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-navy-900">سجل وحجوزات العملاء</h3>
+            <span className="text-xs font-bold bg-gold-500/10 border border-gold-500/20 text-gold-600 px-3 py-1 rounded-lg">
+              تصفية وبحث تلقائي
+            </span>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search Input */}
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="البحث باسم العميل، الهاتف، أو الدولة..."
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-navy-150 text-xs font-bold text-navy-900 focus:border-gold-500 outline-none transition-all"
+            />
+
+            {/* Status Filter */}
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-navy-150 text-xs font-bold text-navy-800 focus:border-gold-500 outline-none cursor-pointer"
+            >
+              <option value="ALL">جميع الحالات</option>
+              <option value="NEW">جديد</option>
+              <option value="CONTACTED">تم التواصل</option>
+              <option value="WAITING_PAYMENT">بانتظار الدفع</option>
+              <option value="COMPLETED">مكتمل</option>
+              <option value="CANCELLED">ملغي</option>
+            </select>
+
+            {/* Service Filter */}
+            <select
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl bg-white border border-navy-150 text-xs font-bold text-navy-800 focus:border-gold-500 outline-none cursor-pointer"
+            >
+              <option value="ALL">جميع الخدمات</option>
+              <option value="HAJJ">حج</option>
+              <option value="UMRAH">عمرة</option>
+              <option value="VISA">تأشيرة</option>
+              <option value="TRAVEL">سفر سياحي</option>
+            </select>
+          </div>
         </div>
 
         <div className="flex-1 overflow-x-auto">
-          {recentLeads.length === 0 ? (
+          {filteredLeads.length === 0 ? (
             <div className="px-6 py-16 text-center text-navy-400">
               <Users className="w-12 h-12 mx-auto mb-3 opacity-30 text-gold-500" />
-              <p className="font-medium">لا توجد طلبات واردة بعد</p>
+              <p className="font-bold text-navy-900 mb-1">لا توجد طلبات مطابقة للبحث</p>
+              <p className="text-xs">تأكد من كتابة الكلمات المفتاحية بشكل صحيح أو غير شروط التصفية.</p>
             </div>
           ) : (
             <table className="w-full">
               <thead>
                 <tr className="bg-navy-50/50">
-                  <th className="text-right px-6 py-3 text-xs font-bold text-navy-500">الاسم</th>
-                  <th className="text-right px-6 py-3 text-xs font-bold text-navy-500">الخدمة</th>
-                  <th className="text-right px-6 py-3 text-xs font-bold text-navy-500">الحالة</th>
-                  <th className="text-right px-6 py-3 text-xs font-bold text-navy-500">التاريخ</th>
+                  <th className="text-right px-6 py-3.5 text-xs font-bold text-navy-500">الاسم والاتصال</th>
+                  <th className="text-right px-6 py-3.5 text-xs font-bold text-navy-500">البلد</th>
+                  <th className="text-right px-6 py-3.5 text-xs font-bold text-navy-500">الخدمة</th>
+                  <th className="text-right px-6 py-3.5 text-xs font-bold text-navy-500">الحالة</th>
+                  <th className="text-right px-6 py-3.5 text-xs font-bold text-navy-500">التاريخ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-navy-50">
-                {recentLeads.map((lead) => (
+                {filteredLeads.map((lead) => (
                   <tr key={lead.id} className="hover:bg-navy-50/30 transition-colors">
                     <td className="px-6 py-4">
                       <div className="text-sm font-bold text-navy-900">{lead.name}</div>
                       <div className="text-xs text-navy-500" dir="ltr">{lead.phone}</div>
+                    </td>
+                    <td className="px-6 py-4 text-sm font-bold text-navy-600">
+                      {lead.country || "غير محدد"}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-navy-600">
                       {serviceLabels[lead.serviceType] || lead.serviceType}

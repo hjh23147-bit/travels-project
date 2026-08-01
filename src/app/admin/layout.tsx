@@ -3,25 +3,30 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Star, LayoutDashboard, Package, Users, FileText, LogOut, Menu, X, Building2, Globe, Megaphone } from "lucide-react";
+import { 
+  Star, LayoutDashboard, Package, Users, FileText, LogOut, 
+  Menu, X, Building2, Globe, Megaphone, Briefcase, FileCheck 
+} from "lucide-react";
 
 // All sidebar links with role restrictions
-// allowedRoles: if set, only these roles can see the link. If not set, all roles can see it.
 const sidebarLinks = [
   { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard, adminOnly: false },
   { href: "/admin/agency-requests", label: "طلبات المكاتب", icon: Building2, adminOnly: true },
   { href: "/admin/agencies", label: "إدارة المكاتب", icon: Building2, adminOnly: true },
-  { href: "/admin/packages", label: "إدارة الباقات", icon: Package, adminOnly: false },
-  { href: "/admin/orders", label: "إدارة الطلبات", icon: Users, adminOnly: false },
+  { href: "/admin/packages", label: "باقات الحج والعمرة", icon: Package, adminOnly: false, allowedRoles: ["SUPER_ADMIN", "ADMIN", "TRAVEL_OFFICE_MANAGER"] },
+  { href: "/admin/orders", label: "حجوزات السفر", icon: Users, adminOnly: false, allowedRoles: ["SUPER_ADMIN", "ADMIN", "TRAVEL_OFFICE_MANAGER"] },
+  { href: "/admin/jobs", label: "فرص العمل والتوظيف", icon: Briefcase, adminOnly: false, allowedRoles: ["SUPER_ADMIN", "ADMIN", "EMPLOYMENT_OFFICE_MANAGER"] },
+  { href: "/admin/job-reservations", label: "طلبات التوظيف والعمل", icon: FileCheck, adminOnly: false, allowedRoles: ["SUPER_ADMIN", "ADMIN", "EMPLOYMENT_OFFICE_MANAGER"] },
   { href: "/admin/ads", label: "الإعلانات والمقالات", icon: Megaphone, adminOnly: false },
   { href: "/admin/users", label: "إدارة المدراء", icon: Users, adminOnly: true },
   { href: "/admin/content", label: "إدارة المحتوى", icon: FileText, adminOnly: true },
 ];
 
-// AGENCY_ADMIN can only see ads and return to site
-const isAllowedForRole = (link: { adminOnly: boolean }, role: string) => {
-  if (role === "AGENCY_ADMIN") return !link.adminOnly;
-  return true; // ADMIN and SUPER_ADMIN see everything
+const isAllowedForRole = (link: any, role: string) => {
+  if (role === "SUPER_ADMIN" || role === "ADMIN") return true;
+  if (link.adminOnly) return false;
+  if (link.allowedRoles) return link.allowedRoles.includes(role);
+  return true; 
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -35,7 +40,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (pathname === "/admin/login") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMounted(true);
       return;
     }
@@ -44,20 +48,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const role = sessionStorage.getItem("admin_role");
     
     if (!role) {
-      // Use replace() so the admin page is REMOVED from browser history
       window.location.replace("/admin/login");
       return;
     }
 
-    // AGENCY_ADMIN: block access to all admin pages except their own modules
-    if (role === "AGENCY_ADMIN" && 
-        pathname !== "/admin" && 
-        !pathname.startsWith("/admin/packages") &&
-        !pathname.startsWith("/admin/orders") &&
-        !pathname.startsWith("/admin/ads") && 
-        pathname !== "/admin/login") {
-      window.location.replace("/admin");
-      return;
+    const isGlobalAdmin = role === "SUPER_ADMIN" || role === "ADMIN";
+    
+    // Dynamic Role-based Path Blocking
+    if (!isGlobalAdmin && pathname !== "/admin" && pathname !== "/admin/login") {
+      const matchingLink = sidebarLinks.find(link => pathname.startsWith(link.href));
+      if (matchingLink) {
+        if (matchingLink.adminOnly) {
+          window.location.replace("/admin");
+          return;
+        }
+        if (matchingLink.allowedRoles && !matchingLink.allowedRoles.includes(role)) {
+          window.location.replace("/admin");
+          return;
+        }
+      }
     }
     
     setAdminName(name || "المدير");

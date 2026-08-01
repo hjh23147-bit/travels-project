@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
     const adminAgencyId = req.headers.get("x-agency-id");
 
     const whereClause: Record<string, unknown> = {};
-    if (role === "AGENCY_ADMIN" && adminAgencyId) {
+    if (role !== "SUPER_ADMIN" && role !== "ADMIN" && adminAgencyId) {
       whereClause.agencyId = adminAgencyId;
     }
 
@@ -126,7 +126,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "معرّف الطلب مطلوب" }, { status: 400 });
     }
 
-    if (role === "AGENCY_ADMIN" && adminAgencyId) {
+    if (role !== "SUPER_ADMIN" && role !== "ADMIN" && adminAgencyId) {
       const existing = await prisma.lead.findUnique({ where: { id: data.id } });
       if (!existing || existing.agencyId !== adminAgencyId) {
         return NextResponse.json({ error: "غير مصرح" }, { status: 403 });
