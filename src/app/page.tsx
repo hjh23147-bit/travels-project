@@ -4,6 +4,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import SmartBookingBox from "@/components/SmartBookingBox";
 import AgenciesCarousel from "@/components/AgenciesCarousel";
 import Home3dWrapper from "@/components/3d/Home3dWrapper";
+import HologramDashboard from "@/components/ui/HologramDashboard";
 import prisma from "@/lib/db";
 import Link from "next/link";
 
@@ -81,9 +82,11 @@ export default async function HomePage() {
       <div className="relative z-10 pointer-events-none w-full">
         
         {/* ============ HERO SECTION ============ */}
-        <section className="relative min-h-screen flex items-center pt-24 pb-20 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section className="relative min-h-screen flex flex-col justify-between pt-24 pb-8 overflow-hidden">
+          
+          {/* Main Grid Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex-grow flex items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
               
               {/* Left side: Booking Box */}
               <div className="w-full lg:col-span-5 order-2 lg:order-1 pointer-events-auto">
@@ -100,7 +103,7 @@ export default async function HomePage() {
                     الوجهة الرسمية المعتمدة لخدمات ضيوف الرحمن
                   </span>
                   
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.25] mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.25] mb-6 font-serif">
                     {heroTitle1} <br />
                     <span className="text-gradient-gold">{heroTitle2}</span>
                   </h1>
@@ -129,6 +132,38 @@ export default async function HomePage() {
               </div>
               
             </div>
+          </div>
+
+          {/* Floating Phone App Display in Bottom-Right */}
+          <div className="hidden lg:block absolute bottom-32 right-12 z-20 pointer-events-auto">
+            <div className="w-44 h-72 rounded-[2.5rem] border border-white/10 bg-[#061129]/80 backdrop-blur-md p-3.5 shadow-2xl flex flex-col justify-between text-right animate-pulse">
+              {/* Speaker Notch */}
+              <div className="w-16 h-3 bg-black rounded-full mx-auto mb-2 border border-white/5" />
+              
+              {/* Simulated Mobile Screen */}
+              <div className="flex-grow rounded-2xl bg-[#020617] border border-white/5 p-2 flex flex-col justify-between text-[8px] text-gray-300 font-sans">
+                <div className="flex items-center justify-between border-b border-white/5 pb-1">
+                  <span>شبكة النور</span>
+                  <span className="text-emerald-400">● 5G</span>
+                </div>
+                
+                <div className="space-y-1.5 my-auto text-center">
+                  <div className="text-lg">🕋</div>
+                  <p className="font-extrabold text-white">باقة عمرة رمضان</p>
+                  <p className="text-gray-400">المدينة: فندق النور</p>
+                  <p className="text-gold-400 font-extrabold">السعر: 1,431 ريال</p>
+                </div>
+                
+                <div className="py-1 rounded bg-gradient-to-r from-gold-500 to-gold-600 text-navy-950 font-black text-center select-none cursor-pointer">
+                  احجز من التطبيق
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Spaceship Holographic Console Panel at the bottom center */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-25 w-full mb-2">
+            <HologramDashboard />
           </div>
         </section>
 
@@ -298,28 +333,6 @@ export default async function HomePage() {
               </AnimatedSection>
             </div>
             
-          </div>
-        </section>
-
-        {/* ============ STATS BAR ============ */}
-        <section className="py-16 bg-[#020617]/80 backdrop-blur-sm relative overflow-hidden border-y border-white/5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pointer-events-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {[
-                { icon: ThumbsUp, value: "98%", label: "نسبة رضا العملاء" },
-                { icon: BadgeCheck, value: "+50K", label: "عميل سعيد بالخدمات" },
-                { icon: Award, value: "+10", label: "سنوات خبرة وعطاء" },
-                { icon: Building2, value: "+100", label: "شريك ووكيل معتمد" }
-              ].map((stat, idx) => (
-                <AnimatedSection key={idx} delay={idx * 0.05} className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-3">
-                    <stat.icon className="w-5 h-5 text-gold-400" />
-                  </div>
-                  <div className="text-3xl sm:text-4xl font-black text-gold-400 mb-1">{stat.value}</div>
-                  <div className="text-gray-300 text-xs sm:text-sm font-semibold">{stat.label}</div>
-                </AnimatedSection>
-              ))}
-            </div>
           </div>
         </section>
 

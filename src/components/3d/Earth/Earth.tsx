@@ -1,6 +1,4 @@
-"use client";
-
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { latLonToVector3 } from "@/utils/math";
@@ -39,6 +37,60 @@ export default function Earth() {
   const earthRef = useRef<THREE.Group>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   const atmosphereRef = useRef<THREE.Mesh>(null);
+  const [earthTexture, setEarthTexture] = useState<THREE.Texture | null>(null);
+
+  useEffect(() => {
+    // 1. Asynchronously load the photorealistic Earth texture from Three.js CDN
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/land_ocean_ice_cloud_2048.jpg",
+      (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+        setEarthTexture(texture);
+      },
+      undefined,
+      (err) => {
+        console.warn("Failed to fetch Earth texture, generating holographic fallback:", err);
+        // 2. Fallback: Draw a gorgeous futuristic cyan grid layout on an HTML Canvas
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          // Dark space-blue background
+          ctx.fillStyle = "#050b1d";
+          ctx.fillRect(0, 0, 1024, 512);
+
+          // Grid coordinates lines
+          ctx.strokeStyle = "rgba(6, 182, 212, 0.15)";
+          ctx.lineWidth = 1.5;
+          for (let i = 0; i <= 360; i += 15) {
+            const x = (i * 1024) / 360;
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 512); ctx.stroke();
+          }
+          for (let i = 0; i <= 180; i += 15) {
+            const y = (i * 512) / 180;
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1024, y); ctx.stroke();
+          }
+
+          // Abstract glowing continents
+          ctx.fillStyle = "rgba(0, 240, 255, 0.28)";
+          // Asia & Europe
+          ctx.beginPath(); ctx.arc(620, 180, 95, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(710, 210, 60, 0, Math.PI * 2); ctx.fill();
+          // Africa
+          ctx.beginPath(); ctx.arc(520, 290, 75, 0, Math.PI * 2); ctx.fill();
+          // North America
+          ctx.beginPath(); ctx.arc(280, 170, 85, 0, Math.PI * 2); ctx.fill();
+          // South America
+          ctx.beginPath(); ctx.arc(320, 340, 70, 0, Math.PI * 2); ctx.fill();
+        }
+        
+        const fallbackTex = new THREE.CanvasTexture(canvas);
+        setEarthTexture(fallbackTex);
+      }
+    );
+  }, []);
 
   useFrame(({ clock }) => {
     const elapsed = clock.getElapsedTime();
@@ -83,6 +135,7 @@ export default function Earth() {
             metalness={0.85}
             emissive="#010410"
             bumpScale={0.05}
+            map={earthTexture || undefined}
           />
         </mesh>
 
